@@ -11,11 +11,11 @@ var marker;
  * Helper method that shows an alert above the map
  */
 function showAlert(msg){
-    var html = "<div id=\"alert-div\" class=\"alert alert-warning alert-dismissable\">";
+    var html = "<div class=\"row\"><div class=\"col-md-10\"><div id=\"alert-div\" class=\"alert alert-warning alert-dismissable\">";
     html += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
     html += msg;
-    html += "</div>";
-    $(html).insertBefore("#map");
+    html += "</div></div></div>";
+    $(html).insertAfter("#location-input-row");
 }
 
 /*
@@ -55,6 +55,19 @@ function populateTemplates(data){
 
                 data.classes = [];
 
+                /*
+                 *  Sort the data, see also:
+                 *  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+                 */
+                layer['classes'].sort(function(a, b){
+                    if (a.areashare > b.areashare)
+                        return -1;
+                    if (a.areashare < b.areashare)
+                        return 1;
+                    // a must be equal to b
+                    return 0;
+                });
+
                 for(var i = 0; i < layer['classes'].length; i++){
                     data.classes.push({
                         areashare: Math.round(layer['classes'][i].areashare * 10.)/10.,
@@ -62,12 +75,23 @@ function populateTemplates(data){
                     });
                 }
 
+                // Append the rendered template to the content wrapper division
                 $("div.content-wrapper").append($.Mustache.render("landcover-template", data));
 
                 break;
 
             case "accessibility: travel time to major cities":
                 data.classes = [];
+
+                // Sort the data
+                layer['classes'].sort(function(a, b){
+                    if (a.areashare > b.areashare)
+                        return -1;
+                    if (a.areashare < b.areashare)
+                        return 1;
+                    // a must be equal to b
+                    return 0;
+                });
 
                 for(var i = 0; i < layer['classes'].length; i++){
                     data.classes.push({
@@ -273,9 +297,9 @@ var ShareControl = L.Control.extend({
 map.addControl(new ShareControl());
 
 L.control.layers({},{
-    "Global landcover": globcover_2009,
-    "Population density": population_density,
-    "Accessibility": accessibility
+    "Global landcover&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\" id=\"globcover_2009\"></i></a>": globcover_2009,
+    "Landscan population density&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\"></i></a>": population_density,
+    "Accessibility: travel time to major cities&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\"></i></a>": accessibility
 }).addTo(map);
 
 // Check if an inital marker is set. If yes, set the marker and fill in the
@@ -293,6 +317,11 @@ $("#location-input-button").click(function(e){
     map.panTo(L.latLng(lat, lon), {
         animate: true
     });
+});
+
+$(".fa-info-circle").click(function(e){
+   $("#legend-modal").modal();
+
 });
 
 /* (C) 2009 Ivan Boldyrev <lispnik@gmail.com>
