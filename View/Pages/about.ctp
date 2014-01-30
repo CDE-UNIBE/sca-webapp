@@ -12,8 +12,8 @@
 <div class="row">
 <div class="col-md-9">
 <img src="logos/cde.jpg" alt="CDE">
-<img src="logos/cde.jpg" alt="NCCR">
-<img src="logos/cde.jpg" alt="SDC">
-<img src="logos/cde.jpg" alt="SNF">
+<img src="logos/nccr.jpg" alt="NCCR">
+<img src="logos/sdc.jpg" alt="SDC">
+<img src="logos/snf.jpg" alt="SNF">
 </div>
 </div>
