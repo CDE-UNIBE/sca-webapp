@@ -9,17 +9,17 @@
     <meta name="author" content="">
     <?php
     echo $this->Html->meta('icon');
-    echo $this->fetch('css');
-    echo $this->fetch('script');
-    echo $this->Html->script(array("jquery-1.10.2.min.js","bootstrap-3.0.3/bootstrap.min.js"));
+    echo $this->Html->css("bootstrap-3.0.3/bootstrap.min.css");
+    echo $this->Html->css("font-awesome-4.0.3/font-awesome.min.css");
+    echo $this->Html->script(array("jquery-1.10.2.min.js","bootstrap-3.0.3/bootstrap.min.js","mustache.js","jquery.mustache.js"));
     ?>
 
     <title>Spatial Context Analyst</title>
 
     <!-- Bootstrap core CSS -->
     <?php
-    echo $this->Html->css("bootstrap-3.0.3/bootstrap.min.css");
-    echo $this->Html->css("font-awesome-4.0.3/font-awesome.min.css");
+    echo $this->fetch('css');
+    echo $this->fetch('script');
     ?>
     <!-- Custom styles for this template -->
     <!--<link href="navbar-static-top.css" rel="stylesheet">-->
@@ -70,7 +70,7 @@
     </div>
 
 
-    <div class="container content-wrapper" style="margin-top: 20px;">
+    <div class="container" style="margin-top: 20px;">
       <!-- Main component for a primary marketing message or call to action -->
         <?php echo $this->fetch('content'); ?>
     </div><!-- /container -->

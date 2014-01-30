@@ -31,3 +31,16 @@
 .bfast-button-row {
     margin: 0px 0px 15px 0px;
 }
+
+.stats-data.description {
+    margin: 10px -15px;
+}
+
+a.external {
+    background: url("../img/external-link-ltr-icon.png") no-repeat scroll right center rgba(0, 0, 0, 0);
+    padding: 0 13px 0 0;
+}
+
+div.darker {
+    background-color: #4AACEC;
+}

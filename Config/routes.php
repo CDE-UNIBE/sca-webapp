@@ -31,6 +31,11 @@ Router::connect('/about', array('controller' => 'pages', 'action' => 'display', 
 
 Router::connect('/wps', array('controller' => 'wps', 'action' => 'index'));
 
+// Add a route to get the Geohash shortcuts URL
+Router::connect('/:location', array('controller' => 'pages',
+            'action' => 'location'),
+                array('location' => '[a-z0-9]+'));
+
 Router::parseExtensions('json');
 
 /**

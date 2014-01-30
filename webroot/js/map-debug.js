@@ -1,8 +1,16 @@
-$(".alert").alert()
+// Enable bootstrap alerts
+$(".alert").alert();
 
+// Parse the DOM for Mustache templates
+$.Mustache.addFromDom();
+
+// Global variable for the marker
 var marker;
 
-var showAlert = function(msg){
+/**
+ * Helper method that shows an alert above the map
+ */
+function showAlert(msg){
     var html = "<div id=\"alert-div\" class=\"alert alert-warning alert-dismissable\">";
     html += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
     html += msg;
@@ -10,13 +18,84 @@ var showAlert = function(msg){
     $(html).insertBefore("#map");
 }
 
-var setLocation = function(lon, lat){
+/*
+ * Populates the data returned from the Web Processing Service to the Mustache
+ * templates.
+ */
+function populateTemplates(data){
+    $.each(data['layers'], function(index, layer){
+        var data = {
+            layername: layer['layername']
+        };
+
+        switch (layer["layername"].toLowerCase()) {
+            case "landscan population density 2011":
+
+                // Append the average value:
+                for(var i = 0; i < layer['statistics'].length; i++){
+                    if(layer['statistics'][i]['name'].toLowerCase() == "mean"){
+                        data.mean = Math.round(layer['statistics'][i]['value'] * 10.) / 10.
+                    }
+                    if(layer['statistics'][i]['name'].toLowerCase() == "minimum"){
+                        data.minimum = parseInt(layer['statistics'][i]['value']);
+                    }
+                    if(layer['statistics'][i]['name'].toLowerCase() == "maximum"){
+                        data.maximum = parseInt(layer['statistics'][i]['value']);
+                    }
+                    if(layer['statistics'][i]['name'].toLowerCase() == "standard deviation"){
+                        data.standarddeviation = Math.round(layer['statistics'][i].value + 100.) / 100.;
+                    }
+                }
+
+                $("div.content-wrapper").append($.Mustache.render('landscan-template', data));
+
+                break;
+
+            case "global land cover map 2009":
+
+                data.classes = [];
+
+                for(var i = 0; i < layer['classes'].length; i++){
+                    data.classes.push({
+                        areashare: Math.round(layer['classes'][i].areashare * 10.)/10.,
+                        name: layer['classes'][i].name
+                    });
+                }
+
+                $("div.content-wrapper").append($.Mustache.render("landcover-template", data));
+
+                break;
+
+            case "accessibility: travel time to major cities":
+                data.classes = [];
+
+                for(var i = 0; i < layer['classes'].length; i++){
+                    data.classes.push({
+                        areashare: Math.round(layer['classes'][i].areashare * 10.)/10.,
+                        name: layer['classes'][i].name
+                    });
+                }
+
+                $("div.content-wrapper").append($.Mustache.render("accessibility-template", data));
+
+                break;
+
+            default:
+                break;
+        }
+
+        // Highlights even rows
+        $(".row.stats-data-row:even > div").addClass("darker");
+    });
+}
+
+function setLocation(lon, lat){
     $("div.loading").detach();
+    $("div.stats-data").detach();
     if(map.hasLayer(marker)){
         map.removeLayer(marker);
     }
     
-    //var innerHtml = "<div class=\"row loading\"><div class=\"col-md-5 col-md-offset-1\">Data are being processed ...</div></div>";
     var innerHtml = "<div class=\"row loading\"><div class=\"col-md-4 col-md-offset-4\"><img width=\"400\" height=\"400\" src=\"img/spinner.gif\" alt=\"Loading ...\"></img></div></div>";
 
     $("div.content-wrapper").append(innerHtml);
@@ -28,11 +107,17 @@ var setLocation = function(lon, lat){
     marker.on('click', function(e){
         map.removeLayer(marker);
         $("div.loading").detach();
+        $("div.stats-data").detach();
         $("#longitude-input").val("");
         $("#latitude-input").val("");
         marker = undefined;
     });
     marker.addTo(map);
+
+    // Get the buffer size
+    console.log($("#buffer-select"));
+
+    var buffer = 500;
 
     /*
      * Request the following Web Processing Service:
@@ -50,23 +135,27 @@ var setLocation = function(lon, lat){
             Request: "Execute",
             Version: "1.0.0",
             Identifier: "BufferStatistics",
-            DataInputs: "lon=" + lon + ";lat=" + lat + ";epsg=4326"
+            DataInputs: "lon=" + lon + ";lat=" + lat + ";epsg=4326;buffer=" + buffer
         },
         success: function(data, textStatus, jqXHR){
 
             //console.log(data);
 
-            $.each(data['layers'], function(index, value){
-                $("div.loading").detach();
-                $("div.content-wrapper").append("<div class=\"row\"><div class=\"col-md-10 col-md-offset-1\"><h2>" + value.layername + "</h2></div></div>");
+            $("div.loading").detach();
+            $("div.stats-data").detach();
 
-            });
+            try {
+                populateTemplates(data);
+
+            } catch (e) {
+                showAlert("Oops, could not find any data!");
+            }
            
         }
     });
 }
 
-var mapOnClick = function(event){
+function mapOnClick(event){
     var lat = event.latlng.lat;
     var lon = event.latlng.lng;
     setLocation(lon, lat);
@@ -82,23 +171,28 @@ else if(typeof mlat != 'undefined' && typeof mlon != 'undefined'){
     map.setView([0, 0], 2);
 }
 
-var baselayer = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>',
-    maxZoom: 17
+// OpenStreetMap base layer
+var baselayer = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
+    attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">',
+    maxZoom: 17,
+    subdomains: [1,2,3,4]
 });
 baselayer.addTo(map);
 
 var globcover_2009 = L.tileLayer('http://cdetux2.unibe.ch/geoserver/gwc/service/tms/1.0.0/lo:globcover_2009@EPSG:900913@png/{z}/{x}/{y}.png', {
+    opacity: 0.6,
     tms: true,
     maxZoom: 17
 });
 
 var accessibility = L.tileLayer('http://cdetux2.unibe.ch/geoserver/gwc/service/tms/1.0.0/lo:accessability@EPSG:900913@jpeg/{z}/{x}/{y}.png', {
+    opacity: 0.6,
     tms: true,
     maxZoom: 17
 });
 
 var population_density = L.tileLayer('http://cdetux2.unibe.ch/geoserver/gwc/service/tms/1.0.0/lo%3Alspop_2008@EPSG%3A900913@png/{z}/{x}/{y}.png', {
+    opacity: 0.6,
     tms: true,
     maxZoom: 17
 });
@@ -180,9 +274,7 @@ var ShareControl = L.Control.extend({
 
 map.addControl(new ShareControl());
 
-L.control.layers({
-    "Base Layer": baselayer
-},{
+L.control.layers({},{
     "Global landcover": globcover_2009,
     "Population density": population_density,
     "Accessibility": accessibility
@@ -206,35 +298,35 @@ $("#location-input-button").click(function(e){
 });
 
 /* (C) 2009 Ivan Boldyrev <lispnik@gmail.com>
- *
- * Fgh is a fast GeoHash implementation in JavaScript.
- *
- * Fgh is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * Fgh is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; if not, see <http://www.gnu.org/licenses/>.
- */
+*
+* Fgh is a fast GeoHash implementation in JavaScript.
+*
+* Fgh is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 3 of the License, or
+* (at your option) any later version.
+*
+* Fgh is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this software; if not, see <http://www.gnu.org/licenses/>.
+*/
 (function () {
     var _tr = "0123456789bcdefghjkmnpqrstuvwxyz";
     /* This is a table of i => "even bits of i combined".  For example:
-     * #b10101 => #b111
-     * #b01111 => #b011
-     * #bABCDE => #bACE
-     */
+ * #b10101 => #b111
+ * #b01111 => #b011
+ * #bABCDE => #bACE
+ */
     var _dm = [0, 1, 0, 1, 2, 3, 2, 3, 0, 1, 0, 1, 2, 3, 2, 3,
     4, 5, 4, 5, 6, 7, 6, 7, 4, 5, 4, 5, 6, 7, 6, 7];
 
     /* This is an opposit of _tr table: it maps #bABCDE to
-     * #bA0B0C0D0E.
-     */
+ * #bA0B0C0D0E.
+ */
     var _dr = [0, 1, 4, 5, 16, 17, 20, 21, 64, 65, 68, 69, 80,
     81, 84, 85, 256, 257, 260, 261, 272, 273, 276, 277,
     320, 321, 324, 325, 336, 337, 340, 341];
@@ -288,8 +380,8 @@ $("#location-input-button").click(function(e){
             lon = lon/360.0+0.5;
             
             /* We generate two symbols per iteration; each symbol is 5
-             * bits; so we divide by 2*5 == 10.
-             */
+         * bits; so we divide by 2*5 == 10.
+         */
             var r = '', l = Math.ceil(bits/10), hlt, hln, b2, hi, lo, i;
 
             for (i = 0; i < l; ++i) {
