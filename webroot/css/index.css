@@ -1,0 +1,33 @@
+.get-location-control {
+    background: none repeat scroll 0 0 #F8F8F9;
+    border-radius: 5px;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.4);
+}
+
+.get-location-control a {
+    background-image: url("../img/get-location_26.png");
+    height: 36px !important;
+    width: 36px !important;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: block;
+}
+
+.share-control {
+    background: none repeat scroll 0 0 #F8F8F9;
+    border-radius: 5px;
+    box-shadow: 0 1px 7px rgba(0, 0, 0, 0.4);
+}
+
+.share-control a {
+    background-image: url("../img/icon_15026_26.png");
+    height: 36px !important;
+    width: 36px !important;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    display: block;
+}
+
+.bfast-button-row {
+    margin: 0px 0px 15px 0px;
+}
