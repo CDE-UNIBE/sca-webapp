@@ -96,7 +96,7 @@ function setLocation(lon, lat){
         map.removeLayer(marker);
     }
     
-    var innerHtml = "<div class=\"row loading\"><div class=\"col-md-4 col-md-offset-4\"><img width=\"400\" height=\"400\" src=\"img/spinner.gif\" alt=\"Loading ...\"></img></div></div>";
+    var innerHtml = "<div class=\"row loading\"><div class=\"col-md-1 col-md-offset-5\"><img width=\"36\" height=\"39\" src=\"img/spinner.gif\" alt=\"Loading ...\"></img></div></div>";
 
     $("div.content-wrapper").append(innerHtml);
 
@@ -115,9 +115,7 @@ function setLocation(lon, lat){
     marker.addTo(map);
 
     // Get the buffer size
-    console.log($("#buffer-select"));
-
-    var buffer = 500;
+    var buffer = $("#buffer-select > option:selected")[0].value;
 
     /*
      * Request the following Web Processing Service:

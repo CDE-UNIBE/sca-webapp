@@ -33,24 +33,18 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
                 <label class="sr-only" for="latitude-input">Latitude</label>
                 <input type="number" class="form-control" id="latitude-input" placeholder="Latitude">
             </div>
-            <button type="button" id="location-input-button" class="btn btn-default">Set location</button>
-        </form>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-2 col-md-offset-1">
-        Sample radius:
-    </div>
-    <div class="col-md-2">
-        <form class="form-inline" role="form" id="buffer-size-form" style="margin-bottom: 20px;">
-            <select class="form-control" id="buffer-select">
-                <option value="100">100 meters</option>
-                <option value="500">500 meters</option>
-                <option value="5000">5 km</option>
-                <option value="50000">50 km</option>
-                <option value="500000">500 km</option>
-            </select>
+            <div class="form-group">
+                <button type="button" id="location-input-button" class="btn btn-default">Set location</button>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="buffer-select">
+                    <option value="100">Sample radius: 100 meters</option>
+                    <option selected value="500">Sample radius: 500 meters</option>
+                    <option value="5000">Sample radius: 5 km</option>
+                    <option value="50000">Sample radius: 50 km</option>
+                    <option value="500000">Sample radius: 500 km</option>
+                </select>
+            </div>
         </form>
     </div>
 </div>
@@ -121,7 +115,7 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
     {{#classes}}
     <div class="row stats-data stats-data-row">
         <div class="col-md-3 col-md-offset-1">{{areashare}}% area share:</div>
-        <div class="col-md-7">{{name}}</div>
+        <div class="col-md-3">{{name}}</div>
     </div>
     {{/classes}}
 </script>

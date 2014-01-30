@@ -56,7 +56,7 @@
             <span class="icon-bar"></span>
           </button>
           <a class="logo navbar-btn pull-left" href="<?php echo $this->Html->url(array("controller" => "pages", "action" => "display", "index"));?>" title="Home">
-        <?php echo $this->Html->image("unibern_logo.png", array('alt' => "Home"))?>
+        <?php /*echo $this->Html->image("unibern_logo.png", array('alt' => "Home")) */?>
       </a>
           <a class="navbar-brand" href="<?php echo $this->Html->url(array("controller" => "pages", "action" => "display", "index"));?>">Spatial Context Analyst</a>
         </div>
