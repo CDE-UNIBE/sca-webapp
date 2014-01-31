@@ -7,15 +7,17 @@ $.Mustache.addFromDom();
 // Global variable for the marker
 var marker;
 
+// Global layer names, must be the same as in BufferStatistics web processing service
+var landcover_layername = "Land Cover", accessibility_layername = "Accessibility", popdensity_layername = "Population Density";
+
 /**
- * Helper method that shows an alert above the map
+ * Helper method that shows an alert on top of the page
  */
 function showAlert(msg){
-    var html = "<div class=\"row\"><div class=\"col-md-10\"><div id=\"alert-div\" class=\"alert alert-warning alert-dismissable\">";
-    html += "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>";
-    html += msg;
-    html += "</div></div></div>";
-    $(html).insertAfter("#location-input-row");
+    // Remove first exisiting alerts
+    $("#alert-row").detach();
+    // Set up the new alert using a template
+    $($.Mustache.render('alert-template', {msg: msg})).insertBefore("#intro-row");
 }
 
 /*
@@ -29,7 +31,7 @@ function populateTemplates(data){
         };
 
         switch (layer["layername"].toLowerCase()) {
-            case "landscan population density 2011":
+            case popdensity_layername.toLowerCase():
 
                 // Append the average value:
                 for(var i = 0; i < layer['statistics'].length; i++){
@@ -51,7 +53,7 @@ function populateTemplates(data){
 
                 break;
 
-            case "global land cover map 2009":
+            case landcover_layername.toLowerCase():
 
                 data.classes = [];
 
@@ -80,7 +82,7 @@ function populateTemplates(data){
 
                 break;
 
-            case "accessibility: travel time to major cities":
+            case accessibility_layername.toLowerCase():
                 data.classes = [];
 
                 // Sort the data
@@ -113,30 +115,33 @@ function populateTemplates(data){
     });
 }
 
-function setLocation(lon, lat){
+/**
+ * Reads the latitude and longitude input fields and request the web processing
+ * service for this location.
+ */
+function getStatistics(){
     $("div.loading").detach();
     $("div.stats-data").detach();
-    if(map.hasLayer(marker)){
-        map.removeLayer(marker);
+
+    var lon = $("#longitude-input").val();
+    var lat = $("#latitude-input").val();
+
+    if(lon == "" && lat == ""){
+        showAlert("Add first a location on the map or enter geographic coordinates manually.");
+        return null;
     }
-    
+
+    if(!map.hasLayer(marker)){
+        setMarker(lon, lat);
+    }
+
+    map.panTo(L.latLng(lat, lon), {
+        animate: true
+    });
+
     var innerHtml = "<div class=\"row loading\"><div class=\"col-md-1 col-md-offset-5\"><img width=\"36\" height=\"39\" src=\"img/spinner.gif\" alt=\"Loading ...\"></img></div></div>";
 
     $("div.content-wrapper").append(innerHtml);
-
-    // Update also the input fields
-    $("#longitude-input").val(Math.round(lon*10000)/10000);
-    $("#latitude-input").val(Math.round(lat*10000)/10000);
-    marker = L.marker(L.latLng(lat, lon));
-    marker.on('click', function(e){
-        map.removeLayer(marker);
-        $("div.loading").detach();
-        $("div.stats-data").detach();
-        $("#longitude-input").val("");
-        $("#latitude-input").val("");
-        marker = undefined;
-    });
-    marker.addTo(map);
 
     // Get the buffer size
     var buffer = $("#buffer-select > option:selected")[0].value;
@@ -161,26 +166,44 @@ function setLocation(lon, lat){
         },
         success: function(data, textStatus, jqXHR){
 
-            //console.log(data);
-
             $("div.loading").detach();
             $("div.stats-data").detach();
 
             try {
                 populateTemplates(data);
-
             } catch (e) {
                 showAlert("Oops, could not find any data!");
             }
-           
+
         }
     });
+
+    return null;
+}
+
+function setMarker(lon, lat){
+    if(map.hasLayer(marker)){
+        map.removeLayer(marker);
+    }
+    // Update also the input fields
+    $("#longitude-input").val(Math.round(lon*10000)/10000);
+    $("#latitude-input").val(Math.round(lat*10000)/10000);
+    marker = L.marker(L.latLng(lat, lon));
+    marker.on('click', function(e){
+        map.removeLayer(marker);
+        $("div.loading").detach();
+        $("div.stats-data").detach();
+        $("#longitude-input").val("");
+        $("#latitude-input").val("");
+        marker = undefined;
+    });
+    marker.addTo(map);
 }
 
 function mapOnClick(event){
     var lat = event.latlng.lat;
     var lon = event.latlng.lng;
-    setLocation(lon, lat);
+    setMarker(lon, lat);
 }
 
 var map = L.map('map')
@@ -238,7 +261,7 @@ var GetCurrentLocationControl = L.Control.extend({
                 navigator.geolocation.getCurrentPosition(function(p){
                     var coords = p.coords;
                     map.panTo([coords.latitude, coords.longitude]);
-                    setLocation(coords.longitude, coords.latitude);
+                    setMarker(coords.longitude, coords.latitude);
                 }, function(error){
                     showAlert(error.message);
                 }, {
@@ -296,64 +319,65 @@ var ShareControl = L.Control.extend({
 
 map.addControl(new ShareControl());
 
-L.control.layers({},{
-    "Global landcover&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\" id=\"globcover_2009\"></i></a>": globcover_2009,
-    "Landscan population density&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\"></i></a>": population_density,
-    "Accessibility: travel time to major cities&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\"></i></a>": accessibility
-}).addTo(map);
+var layers_control = L.control.layers();
+layers_control.addOverlay(globcover_2009,
+    landcover_layername + "&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\" data-layer=\"lo:globcover_2009\" data-title=\"" + landcover_layername + "\"></i></a>");
+layers_control.addOverlay(population_density,
+    popdensity_layername + "&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\" data-layer=\"lo:lspop_2008\" data-title=\"" + popdensity_layername + "\"></i></a>");
+layers_control.addOverlay(accessibility,
+    accessibility_layername + "&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\" data-layer=\"lo:accessability\" data-title=\"" + accessibility_layername + "\"></i></a>");
+layers_control.addTo(map);
 
 // Check if an inital marker is set. If yes, set the marker and fill in the
 // coordinates input fields
 if(typeof mlat != 'undefined' && typeof mlon != 'undefined'){
-    setLocation(mlon, mlat);
+    setMarker(mlon, mlat);
+    getStatistics();
 }
 
+// Append events to map and "Get Areal Statistics" button
 map.on('click', mapOnClick);
-
-$("#location-input-button").click(function(e){
-    var lon = $("#longitude-input").val();
-    var lat = $("#latitude-input").val();
-    setLocation(lon, lat);
-    map.panTo(L.latLng(lat, lon), {
-        animate: true
-    });
-});
+$("#location-input-button").click(getStatistics);
 
 $(".fa-info-circle").click(function(e){
-   $("#legend-modal").modal();
-
+    $("#legend-modal-content").children().detach();
+    $("#legend-modal-content").append($.Mustache.render('legend-template', {
+        layertitle: $(this).attr("data-title"),
+        layername: $(this).attr("data-layer")
+    }));
+    $("#legend-modal").modal();
 });
 
 /* (C) 2009 Ivan Boldyrev <lispnik@gmail.com>
-*
-* Fgh is a fast GeoHash implementation in JavaScript.
-*
-* Fgh is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* Fgh is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this software; if not, see <http://www.gnu.org/licenses/>.
-*/
+ *
+ * Fgh is a fast GeoHash implementation in JavaScript.
+ *
+ * Fgh is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Fgh is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; if not, see <http://www.gnu.org/licenses/>.
+ */
 (function () {
     var _tr = "0123456789bcdefghjkmnpqrstuvwxyz";
     /* This is a table of i => "even bits of i combined".  For example:
- * #b10101 => #b111
- * #b01111 => #b011
- * #bABCDE => #bACE
- */
+     * #b10101 => #b111
+     * #b01111 => #b011
+     * #bABCDE => #bACE
+     */
     var _dm = [0, 1, 0, 1, 2, 3, 2, 3, 0, 1, 0, 1, 2, 3, 2, 3,
     4, 5, 4, 5, 6, 7, 6, 7, 4, 5, 4, 5, 6, 7, 6, 7];
 
     /* This is an opposit of _tr table: it maps #bABCDE to
- * #bA0B0C0D0E.
- */
+     * #bA0B0C0D0E.
+     */
     var _dr = [0, 1, 4, 5, 16, 17, 20, 21, 64, 65, 68, 69, 80,
     81, 84, 85, 256, 257, 260, 261, 272, 273, 276, 277,
     320, 321, 324, 325, 336, 337, 340, 341];
@@ -407,8 +431,8 @@ $(".fa-info-circle").click(function(e){
             lon = lon/360.0+0.5;
             
             /* We generate two symbols per iteration; each symbol is 5
-         * bits; so we divide by 2*5 == 10.
-         */
+             * bits; so we divide by 2*5 == 10.
+             */
             var r = '', l = Math.ceil(bits/10), hlt, hln, b2, hi, lo, i;
 
             for (i = 0; i < l; ++i) {
