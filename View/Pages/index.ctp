@@ -75,7 +75,6 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
                 <option selected value="500">Sample radius: 500 meters</option>
                 <option value="5000">Sample radius: 5 km</option>
                 <option value="50000">Sample radius: 50 km</option>
-                <option value="500000">Sample radius: 500 km</option>
             </select>
         </p>
     </div>
@@ -139,13 +138,13 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
     </div>
     <div class="row stats-data stats-data-row">
         <div class="col-md-5">
-            Minimum
+            Minimum population density
         </div>
         <div class="col-md-5">{{minimum}} pers / km<sup>2</sup></div>
     </div>
     <div class="row stats-data stats-data-row">
         <div class="col-md-5">
-            Maximum
+            Maximum population density
         </div>
         <div class="col-md-5">{{maximum}} pers / km<sup>2</sup></div>
     </div>

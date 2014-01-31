@@ -85,16 +85,6 @@ function populateTemplates(data){
             case accessibility_layername.toLowerCase():
                 data.classes = [];
 
-                // Sort the data
-                layer['classes'].sort(function(a, b){
-                    if (a.areashare > b.areashare)
-                        return -1;
-                    if (a.areashare < b.areashare)
-                        return 1;
-                    // a must be equal to b
-                    return 0;
-                });
-
                 for(var i = 0; i < layer['classes'].length; i++){
                     data.classes.push({
                         areashare: Math.round(layer['classes'][i].areashare * 10.)/10.,
