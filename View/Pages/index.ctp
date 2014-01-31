@@ -15,8 +15,17 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
 ?>
 
 <div class="row" id="intro-row">
-    <div class="col-md-10">
+    <div class="col-md-8">
         <p class="text-info">To get started set a location on the map or enter geographic coordinates.</p>
+    </div>
+    <div class="col-md-2" id="logo-div">
+        <p>
+            <a href="http://www.cde.unibe.ch/">
+                <?php
+                echo $this->Html->image("logos/cde_132px.png");
+                ?>
+            </a>
+        </p>
     </div>
 </div>
 
@@ -206,10 +215,10 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
 </script>
 
 <?php
-$date = date_create();
-if (Configure::read("debug") == 0) {
-    echo $this->Html->script("map.js");
-} else {
-    echo $this->Html->script("map-debug.js?_dc=" . date_timestamp_get($date));
-}
+                $date = date_create();
+                if (Configure::read("debug") == 0) {
+                    echo $this->Html->script("map.js");
+                } else {
+                    echo $this->Html->script("map-debug.js?_dc=" . date_timestamp_get($date));
+                }
 ?>

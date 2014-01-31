@@ -39,3 +39,9 @@
 div.darker {
     background-color: #ededed;
 }
+
+@media screen and (max-width : 800px) {
+    #logo-div {
+        display: none !important;
+    }
+}
