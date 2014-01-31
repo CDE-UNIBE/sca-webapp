@@ -55,7 +55,7 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
     </div>
 </div-->
 
-<div class="row">
+<div class="row" id="location-input-row">
     <div class="col-md-2">
         <p>
             <label class="sr-only" for="latitude-input">Latitude</label>
@@ -80,7 +80,7 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
         </p>
     </div>
     <div class="col-md-3">
-        <button type="button" id="location-input-button" class="btn btn-default"><i class="fa fa-bar-chart-o"></i>&nbsp;Get Areal Statistics</button>
+        <button type="button" id="location-input-button" class="btn btn-primary"><i class="fa fa-bar-chart-o"></i>&nbsp;Get Areal Statistics</button>
     </div>
 </div>
 

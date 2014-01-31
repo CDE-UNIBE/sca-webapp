@@ -17,7 +17,7 @@ function showAlert(msg){
     // Remove first exisiting alerts
     $("#alert-row").detach();
     // Set up the new alert using a template
-    $($.Mustache.render('alert-template', {msg: msg})).insertBefore("#intro-row");
+    $($.Mustache.render('alert-template', {msg: msg})).insertAfter("#location-input-row");
 }
 
 /*
@@ -122,6 +122,7 @@ function populateTemplates(data){
 function getStatistics(){
     $("div.loading").detach();
     $("div.stats-data").detach();
+    $("#alert-row").detach();
 
     var lon = $("#longitude-input").val();
     var lat = $("#latitude-input").val();
@@ -139,7 +140,7 @@ function getStatistics(){
         animate: true
     });
 
-    var innerHtml = "<div class=\"row loading\"><div class=\"col-md-1 col-md-offset-5\"><img width=\"36\" height=\"39\" src=\"img/spinner.gif\" alt=\"Loading ...\"></img></div></div>";
+    var innerHtml = "<div class=\"row loading\"><div class=\"col-md-1 col-md-offset-5\"><p><i class=\"fa fa-cog fa-4x fa-spin\"></i></p></div></div>";
 
     $("div.content-wrapper").append(innerHtml);
 
@@ -321,11 +322,11 @@ map.addControl(new ShareControl());
 
 var layers_control = L.control.layers();
 layers_control.addOverlay(globcover_2009,
-    landcover_layername + "&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\" data-layer=\"lo:globcover_2009\" data-title=\"" + landcover_layername + "\"></i></a>");
+    landcover_layername + "&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle fa-lg\" data-layer=\"lo:globcover_2009\" data-title=\"" + landcover_layername + "\"></i></a>");
 layers_control.addOverlay(population_density,
-    popdensity_layername + "&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\" data-layer=\"lo:lspop_2008\" data-title=\"" + popdensity_layername + "\"></i></a>");
+    popdensity_layername + "&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle fa-lg\" data-layer=\"lo:lspop_2008\" data-title=\"" + popdensity_layername + "\"></i></a>");
 layers_control.addOverlay(accessibility,
-    accessibility_layername + "&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle\" data-layer=\"lo:accessability\" data-title=\"" + accessibility_layername + "\"></i></a>");
+    accessibility_layername + "&nbsp;<a href=\"#\"><i class=\"fa fa-info-circle fa-lg\" data-layer=\"lo:accessability\" data-title=\"" + accessibility_layername + "\"></i></a>");
 layers_control.addTo(map);
 
 // Check if an inital marker is set. If yes, set the marker and fill in the
