@@ -5,15 +5,15 @@
 </div>
 </div>
 <div class="row">
-<div class="col-md-7">
-<p><br>&nbsp;</p>
+<div class="col-md-8" style="margin-top:30px">
+&nbsp;
 </div>
 </div>
 <div class="row">
-<div class="col-md-9">
-<img src="logos/cde.jpg" alt="CDE">
-<img src="logos/nccr.jpg" alt="NCCR">
-<img src="logos/sdc.jpg" alt="SDC">
-<img src="logos/snf.jpg" alt="SNF">
+<div class="col-md-8">
+<img src="logos/cde.jpg" alt="CDE" style="margin-top:20px"></img>
+<img src="logos/nccr.jpg" alt="NCCR" style="margin-top:20px"></img>
+<img src="logos/sdc.jpg" alt="SDC" style="margin-top:20px"></img>
+<img src="logos/snf.jpg" alt="SNF" style="margin-top:20px"></img>
 </div>
 </div>
