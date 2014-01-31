@@ -16,7 +16,7 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
 
 <div class="row" id="intro-row">
     <div class="col-md-8">
-        <p class="text-info">To get started set a location on the map or enter geographic coordinates.</p>
+        <p class="text-info" style="margin-top:50px">This tool is designed to provide users with basic statistical information on accessibility, population density, and land cover at any location worldwide. To get started, place the cursor anywhere on the map or enter direct geographic coordinates.</p>
     </div>
     <div class="col-md-2" id="logo-div">
         <p>
@@ -81,8 +81,8 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
         <p>
             <select class="form-control" id="buffer-select">
                 <option value="100">Sample radius: 100 meters</option>
-                <option selected value="500">Sample radius: 500 meters</option>
-                <option value="5000">Sample radius: 5 km</option>
+                <option value="500">Sample radius: 500 meters</option>
+                <option selected value="5000">Sample radius: 5 km</option>
                 <option value="50000">Sample radius: 50 km</option>
             </select>
         </p>
@@ -138,30 +138,30 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
         </div>
     </div>
     <div class="row stats-data stats-data-row">
-        <div class="col-md-5">
+        <div class="col-md-3">
             Average population density
         </div>
-        <div class="col-md-5">
+        <div class="col-md-7">
             {{mean}} pers / km<sup>2</sup>
         </div>
     </div>
     <div class="row stats-data stats-data-row">
-        <div class="col-md-5">
+        <div class="col-md-3">
             Minimum population density
         </div>
-        <div class="col-md-5">{{minimum}} pers / km<sup>2</sup></div>
+        <div class="col-md-7">{{minimum}} pers / km<sup>2</sup></div>
     </div>
     <div class="row stats-data stats-data-row">
-        <div class="col-md-5">
+        <div class="col-md-3">
             Maximum population density
         </div>
-        <div class="col-md-5">{{maximum}} pers / km<sup>2</sup></div>
+        <div class="col-md-7">{{maximum}} pers / km<sup>2</sup></div>
     </div>
     <!--div class="row stats-data stats-data-row">
-        <div class="col-md-5">
+        <div class="col-md-3">
             Standard deviation
         </div>
-        <div class="col-md-5">{{standarddeviation}} pers / km<sup>2</sup></div>
+        <div class="col-md-7">{{standarddeviation}} pers / km<sup>2</sup></div>
     </div-->
 </script>
 
