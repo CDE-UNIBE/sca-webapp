@@ -209,7 +209,7 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
 <?php
 $date = date_create();
 if (Configure::read("debug") == 0) {
-    echo $this->Html->script("map.js?_dc=" . date_timestamp_get($date));
+    echo $this->Html->script("map.js");
 } else {
     echo $this->Html->script("map-debug.js?_dc=" . date_timestamp_get($date));
 }
