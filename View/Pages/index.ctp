@@ -192,7 +192,7 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
     </div>
     <div class="row stats-data description">
         <div class="col-md-10">
-            Travel time to major cities: A global map of Accessibility from the <a class="external" href="http://bioval.jrc.ec.europa.eu/products/gam/index.htm">Joint Reserch Centre of the European Commission</a>.
+            Travel time to major cities: A global map of Accessibility from the <a class="external" href="http://bioval.jrc.ec.europa.eu/products/gam/index.htm">Joint Research Centre of the European Commission</a>.
         </div>
     </div>
     {{#classes}}
