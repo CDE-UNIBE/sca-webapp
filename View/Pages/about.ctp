@@ -2,7 +2,8 @@
     <div class="col-md-7">
         <h2>About the Spatial Context Analyst</h2>
         <p>
-            This application was prepared at the Centre for Development and Environment (CDE),
+            This application was prepared at the Centre for Development and Environment (CDE)
+	    in cooperation with the Nepal Center for Contemporary Research,
             as part of the Special Research Project on Transnational Pressure on
             Land of the National Centre of Competence in Research (NCCR) North-South programme.
             Financial support from the Swiss National Science Foundation, the Swiss
@@ -18,9 +19,10 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-10">
         <?php echo $this->Html->image('logos/cde.jpg', array('alt' => 'Centre for Development and Environment', "style" => "margin-top: 20px;")); ?>
         <?php echo $this->Html->image('logos/nccr.jpg', array('alt' => 'NCCR North-South', "style" => "margin-top: 20px;")); ?>
+	<?php echo $this->Html->image('logos/nepalccr.jpg', array('alt' => 'Nepal Center for Contemporary Research', "style" => "margin-top: 20px;")); ?>
         <?php echo $this->Html->image('logos/sdc.jpg', array('alt' => 'Swiss Development Cooperation', "style" => "margin-top: 20px;")); ?>
         <?php echo $this->Html->image('logos/snf.jpg', array('alt' => 'Swiss National Science Foundation', "style" => "margin-top: 20px;")); ?>
     </div>
