@@ -1,8 +1,12 @@
 <?php
 echo $this->Html->meta("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no");
-echo $this->Html->script("leaflet-0.6.4/leaflet.js", array('inline' => false));
-echo $this->Html->css("leaflet-0.6.4/leaflet.css", array('inline' => false));
-echo $this->Html->css("index.css", array('inline' => false));
+if (Configure::read("debug") == 0) {
+    echo $this->Html->script(array("leaflet-0.6.4/leaflet", "mustache.min", "jquery.mustache.min"), array('inline' => false));
+    echo $this->Html->css(array("leaflet-0.6.4/leaflet.min", "index.min"), array('inline' => false));
+} else {
+    echo $this->Html->script(array("leaflet-0.6.4/leaflet", "mustache", "jquery.mustache"), array('inline' => false));
+    echo $this->Html->css(array("leaflet-0.6.4/leaflet", "index"), array('inline' => false));
+}
 
 if (isset($mlat) && isset($mlon)) {
     $script = "var mlat = $mlat, mlon = $mlon;";
@@ -16,13 +20,16 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
 
 <div class="row" id="intro-row">
     <div class="col-md-8">
-        <p class="text-info" style="margin-top:50px">This tool is designed to provide users with basic statistical information on accessibility, population density, and land cover at any location worldwide. To get started, place the cursor anywhere on the map or enter direct geographic coordinates.</p>
+        <p class="text-info" id="intro-text">This tool is designed to provide users with basic statistical information on accessibility, population density, and land cover at any location worldwide. To get started, place the cursor anywhere on the map or enter direct geographic coordinates.</p>
     </div>
     <div class="col-md-2" id="logo-div">
         <p>
             <a href="http://www.cde.unibe.ch/">
                 <?php
-                echo $this->Html->image("logos/cde_132px.png");
+                echo $this->Html->image("logos/cde_132px.png",
+                        array("height" => 132,
+                            "width" => 132,
+                            "alt" => "Centre for Development and Environment, University of Bern"));
                 ?>
             </a>
         </p>
@@ -31,7 +38,7 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
 
 <div class="row">
     <div class="col-md-10">
-        <div id="map" style="height: 400px; margin-bottom: 20px; margin-top: 20px;">
+        <div id="map">
 
         </div>
     </div>
@@ -217,8 +224,8 @@ if (isset($lat) && isset($lon) && isset($zoom)) {
 <?php
                 $date = date_create();
                 if (Configure::read("debug") == 0) {
-                    echo $this->Html->script("map.js");
+                    echo $this->Html->script("map.min.js");
                 } else {
-                    echo $this->Html->script("map-debug.js?_dc=" . date_timestamp_get($date));
+                    echo $this->Html->script("map.js?_dc=" . date_timestamp_get($date));
                 }
 ?>
