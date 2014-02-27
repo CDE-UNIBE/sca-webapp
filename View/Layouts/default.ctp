@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<?php echo $this->Html->docType('html5'); ?>
 <html lang="en">
     <head>
         <meta charset="utf-8" content="">
@@ -8,8 +8,13 @@
         <meta name="author" content="">
         <?php
         echo $this->Html->meta('icon');
-        echo $this->Html->css(array("bootstrap-3.0.3/bootstrap.min.css", "font-awesome-4.0.3/font-awesome.min.css", "default.css"));
-        echo $this->Html->script(array("jquery-1.10.2.min.js", "bootstrap-3.0.3/bootstrap.min.js", "mustache.js", "jquery.mustache.js"));
+        if (Configure::read("debug") == 0) {
+            echo $this->Html->css(array("bootstrap-3.0.3/bootstrap.min", "font-awesome-4.0.3/font-awesome.min", "default.min"));
+            echo $this->Html->script(array("jquery-1.10.2.min", "bootstrap-3.0.3/bootstrap.min"));
+        } else {
+            echo $this->Html->css(array("bootstrap-3.0.3/bootstrap.min.css", "font-awesome-4.0.3/font-awesome.min.css", "default"));
+            echo $this->Html->script(array("jquery-1.10.2.min", "bootstrap-3.0.3/bootstrap.min"));
+        }
         ?>
 
         <title>Spatial Context Analyst</title>
