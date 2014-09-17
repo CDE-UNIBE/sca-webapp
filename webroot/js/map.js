@@ -215,19 +215,19 @@ var baselayer = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{
 });
 baselayer.addTo(map);
 
-var globcover_2009 = L.tileLayer('http://cdetux2.unibe.ch/geoserver/gwc/service/tms/1.0.0/lo:globcover_2009@EPSG:900913@png/{z}/{x}/{y}.png', {
+var globcover_2009 = L.tileLayer('http://sdi.cde.unibe.ch/geoserver/gwc/service/tms/1.0.0/lo:globcover_2009@EPSG:900913@png/{z}/{x}/{y}.png', {
     opacity: 0.6,
     tms: true,
     maxZoom: 17
 });
 
-var accessibility = L.tileLayer('http://cdetux2.unibe.ch/geoserver/gwc/service/tms/1.0.0/lo:accessability@EPSG:900913@jpeg/{z}/{x}/{y}.png', {
+var accessibility = L.tileLayer('http://sdi.cde.unibe.ch/geoserver/gwc/service/tms/1.0.0/lo:accessability@EPSG:900913@jpeg/{z}/{x}/{y}.png', {
     opacity: 0.6,
     tms: true,
     maxZoom: 17
 });
 
-var population_density = L.tileLayer('http://cdetux2.unibe.ch/geoserver/gwc/service/tms/1.0.0/lo%3Alspop_2008@EPSG%3A900913@png/{z}/{x}/{y}.png', {
+var population_density = L.tileLayer('http://sdi.cde.unibe.ch/geoserver/gwc/service/tms/1.0.0/lo%3Alspop_2008@EPSG%3A900913@png/{z}/{x}/{y}.png', {
     opacity: 0.6,
     tms: true,
     maxZoom: 17
